@@ -37,6 +37,29 @@ Matriz de confusão do ajustado (linha = certo, coluna = previsto):
 | sonnet | 2 | 48 | 0 |
 | opus | 3 | 7 | 40 |
 
+## Teste ampliado (200 pedidos, `dados/teste_extra.jsonl`)
+
+Gerado por `gerar_teste_extra.py`, escrito à mão e etiquetado por categoria: `comum`, `curto`,
+`longo`, `enganoso` (parece de outra classe) e `informal` (gíria, erros de digitação).
+
+| checkpoint | precisão |
+|---|---|
+| `laya-multilingual` sem ajuste | 62,0% |
+| `laya` (inglês) sem ajuste | 76,5% |
+| **`laya-multilingual` ajustado** | **85,5%** |
+
+Acerto do ajustado por categoria:
+
+| | comum | curto | longo | enganoso | informal |
+|---|---|---|---|---|---|
+| haiku | 100% | 100% | 100% | 94% | 90% |
+| sonnet | 95% | 90% | 100% | 69% | 100% |
+| opus | 85% | 69% | 100% | **43%** | 60% |
+
+O ponto fraco continua sendo `opus` que não "parece" complexo: pedidos curtos, informais ou que
+soam simples mas exigem rigor ("Por que o céu é azul? Quero a derivação completa"). 15 dos 20
+erros em `opus` foram para `sonnet`.
+
 ## Limitações observadas
 
 - **Erros concentrados em `opus`**: pedidos complexos com redação diferente dos modelos de frase
