@@ -60,6 +60,36 @@ O ponto fraco continua sendo `opus` que não "parece" complexo: pedidos curtos, 
 soam simples mas exigem rigor ("Por que o céu é azul? Quero a derivação completa"). 15 dos 20
 erros em `opus` foram para `sonnet`.
 
+## Treino v2: com exemplos de reforço
+
+`gerar_reforco.py` acrescenta 106 pedidos escritos à mão (opus curto, informal e enganoso; pares
+sonnet x opus da mesma área), repetidos 2x, ao treino original → `dados/treino_v2.jsonl` (713 linhas).
+Mesmo comando de treino, trocando `--data dados/treino_v2.jsonl`.
+
+| checkpoint | teste (150) | teste ampliado (200) |
+|---|---|---|
+| `laya-multilingual` sem ajuste | 70,0% | 62,0% |
+| ajustado v1 | 90,7% | 85,5% |
+| **ajustado v2** | **94,7%** | **95,0%** |
+
+Acerto do v2 por categoria no teste ampliado:
+
+| | comum | curto | longo | enganoso | informal |
+|---|---|---|---|---|---|
+| haiku | 100% | 100% | 100% | 100% | 90% |
+| sonnet | 100% | 80% | 100% | **62%** | 100% |
+| opus | 100% | 100% | 100% | 93% | 100% |
+
+- `opus` foi de 71% para 99% (69/70) no teste ampliado.
+- **Efeito colateral**: parte do erro migrou para `sonnet enganoso`. Pedidos de nível intermediário
+  com palavras de "complexidade" ("Projete o esquema de banco de um blog", "explique a complexidade
+  desse algoritmo") agora vão para `opus`; pedidos curtos de código ("regex pra validar email")
+  vão para `haiku`.
+- **Ressalva**: os exemplos de reforço foram escritos depois de ver os erros no teste ampliado,
+  mirando as mesmas categorias. Mesmo sem nenhuma frase repetida, isso deixa o teste ampliado
+  menos independente; a melhora no teste original (90,7% → 94,7%) é a evidência mais limpa.
+  Para medir de verdade, falta um terceiro conjunto, nunca usado para decidir nada.
+
 ## Limitações observadas
 
 - **Erros concentrados em `opus`**: pedidos complexos com redação diferente dos modelos de frase
